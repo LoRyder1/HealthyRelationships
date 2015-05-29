@@ -14,24 +14,34 @@ end
 def generate_migrations
   ActiveRecord::Migration.create_table :hotels do |t|
     #insert our columns here
+    t.string :name
+    t.integer :room_count
 
     t.timestamps null: false
   end
 
   ActiveRecord::Migration.create_table :rooms do |t|
     #insert our columns here
+    t.integer :rate
+    t.string :location
+    t.integer :hotel_id
 
     t.timestamps null: false
   end
 
   ActiveRecord::Migration.create_table :bookings do |t|
     #insert our columns here
+    t.string :guest
+    t.string :room
+    t.datetime :check_in
+    t.integer :user_id
 
     t.timestamps null: false
   end
 
   ActiveRecord::Migration.create_table :users do |t|
     #insert our columns here
+    t.string :name
 
     t.timestamps null: false
   end
@@ -47,7 +57,7 @@ migrate()
 
 class Hotel < ActiveRecord::Base
   #insert our associations here
- 
+  has_many :rooms
   def to_s
     "#{name} with #{rooms.count} rooms"
   end
@@ -55,16 +65,20 @@ end
 
 class Booking < ActiveRecord::Base
   #insert our associations here
+  belongs_to :user
 
 end
 
 class Room < ActiveRecord::Base
   #insert our associations here
+  belongs_to :hotel
 
 end
 
 class User < ActiveRecord::Base
   #insert our associations here
+  has_many :bookings
+  has_many :booked_rooms, through: :bookings, class_name: ''
 
 end
 
@@ -95,3 +109,4 @@ line_sep
 tp hotel.bookings
 line_sep
 tp hotel.booked_guests
+
